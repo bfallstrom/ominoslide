@@ -1,3 +1,7 @@
+==========
+ominoslide
+==========
+
 Tile sliding solver for puzzles.
 
 areastructure.*: the basic structure of the board and pieces.
