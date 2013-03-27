@@ -1,12 +1,7 @@
 package com.github.bfallstrom.ominoslide.areastructure;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public final class Omino {
@@ -18,42 +13,16 @@ public final class Omino {
 	Set<Tile> borderRight = new HashSet<Tile>();
 	
 	Integer uniqueId = null;
-	
-	//Tile pieceOrigin; // now origin always assumed to be zero, no reason why not
-	
-	/*
-	public Omino(List<Tile> existingShape, Tile originPoint)
-	{
-		this.currentPosition = new Tile(originPoint.getX(), originPoint.getY(), TilePart.VIRTUAL);
-		for (Tile tile : existingShape) {
-			if(!shape.contains(tile))
-				shape.add(tile);
-		}
-	}
-	*/
-	private Omino()
-	{
-		//pieceOrigin = null;
-	}
-	
-	/*
-	public Omino(int[] xCoords, int[] yCoords)
-	{
-		// Silently discards coordinate data from past the matching portions of the arrays if one is longer
-		int lastIndex = Math.min(xCoords.length, yCoords.length);
 
-		for(int i = 0; i < lastIndex; i++)
-		{
-			//Tile tile = new Tile(xCoords[i]-originX, yCoords[i]-originY, TilePart.OMINO, this);
-			//Tile tile = new Tile(xCoords[i]-originX, yCoords[i]-originY, this);
-			Tile tile = new Tile(xCoords[i], yCoords[i]);
-			if(!shape.contains(tile))
-				shape.add(tile);
-		}
-		//this.currentPosition = new Tile(originX, originY, TilePart.VIRTUAL);
-		//this.pieceOrigin = new Tile(originX, originY);
+	/**
+	 * Creats a default omino with a single tile at its origin.
+	 */
+	public Omino()
+	{
+		shape.add(Tile.ZERO);
 		generateBorders();
-	}*/
+	}
+	
 	
 	/**
 	 * The constructor for a new omino from a collection of tiles. It is required that you
@@ -63,7 +32,7 @@ public final class Omino {
 	 */
 	public Omino(Collection<Tile> tiles)
 	{
-		if(!shape.contains(Tile.ZERO))
+		if(!tiles.contains(Tile.ZERO))
 			throw new IllegalArgumentException("New Omino must contain Tile at (0, 0)!");
 		for(Tile tile : tiles)
 		{

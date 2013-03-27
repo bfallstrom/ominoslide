@@ -46,12 +46,12 @@ public class OminoTest {
 	@Test
 	public void testBorders() {
 		Set<Tile> border = testPiece.getBorderUp();
-		System.out.println(border);
+		assertTrue(border.contains(new Tile(0,2)));
 		border = testPiece.getBorderDown();
-		System.out.println(border);
+		assertTrue(border.contains(new Tile(1,-1)));
 		border = testPiece.getBorderLeft();
-		System.out.println(border);
+		assertTrue(border.contains(new Tile(-1,0)));
 		border = testPiece.getBorderRight();
-		System.out.println(border);
+		assertTrue(border.contains(new Tile(1,1)));
 	}
 }
