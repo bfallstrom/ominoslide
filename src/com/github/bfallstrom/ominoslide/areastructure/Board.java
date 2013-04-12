@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class Board {
-	private Map<Omino, Tile> allPieces = new HashMap<Omino, Tile>(); // Every piece inserted into the map should
-	private List<Omino> pieceOrder = new ArrayList<Omino>(); // immediately be inserted into the list as well.
+public class Board {
+	protected Map<Omino, Tile> allPieces = new HashMap<Omino, Tile>(); // Every piece inserted into the map should
+	protected List<Omino> pieceOrder = new ArrayList<Omino>(); // immediately be inserted into the list as well.
 	
-	private Set<Tile> layout = new HashSet<Tile>();
+	protected Set<Tile> layout = new HashSet<Tile>();
 	int lastPieceMoved = -1;
 
 	public Board(Board oldBoard)
@@ -174,10 +174,39 @@ public final class Board {
 	 */
 	public boolean shiftOmino(int ominoIndex, Direction direction)
 	{
+		Omino omino;
+		Set<Tile> borderCheck;
+		Tile translation;
 		if(ominoIndex < 0 || ominoIndex >= pieceOrder.size())
 			return false;
-		
-		return false; // TODO: NYI
+		omino = pieceOrder.get(ominoIndex);
+		switch (direction) {
+		case UP:
+			borderCheck = omino.getBorderUp();
+			translation = Tile.UP;
+			break;
+		case DOWN:
+			borderCheck = omino.getBorderDown();
+			translation = Tile.DOWN;
+			break;
+		case LEFT:
+			borderCheck = omino.getBorderLeft();
+			translation = Tile.LEFT;
+			break;
+		case RIGHT:
+			borderCheck = omino.getBorderRight();
+			translation = Tile.RIGHT;
+			break;
+		default:
+			return false;
+		}
+		for(Tile tile : borderCheck)
+		{
+			if(!isAvailable(tile))
+				return false;
+		}
+		allPieces.put(omino,  new Tile(allPieces.get(omino), translation));
+		return true;
 	}
 	
 	
@@ -193,7 +222,7 @@ public final class Board {
 			return false;
 		for(Omino existing : pieceOrder)
 		{
-			if(existing.isInOmino(tile, allPieces.get(existing)))
+			if(existing.isInOmino(tile, allPieces.get(existing))) // We do not need to exclude a piece being moved, because the border we test is guaranteed to be entirely outside the piece due to how it is generated! 
 				return false;
 		}
 		return true;
