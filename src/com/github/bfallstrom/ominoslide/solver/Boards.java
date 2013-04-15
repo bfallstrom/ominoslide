@@ -2,6 +2,7 @@ package com.github.bfallstrom.ominoslide.solver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.bfallstrom.ominoslide.areastructure.Board;
 import com.github.bfallstrom.ominoslide.areastructure.WinningPosition;
@@ -10,6 +11,7 @@ public class Boards {
 	private Map<Board,Moves>	states = new HashMap<Board,Moves>(); // maps each known board state to the possible moves that can be made from it
 	private WinningPosition		solved = null;	// The position to seek.
 	private int					winFoundAt = Integer.MAX_VALUE;
+	private Board				rootPosition;
 	
 	public Boards(Board startingPosition, WinningPosition winningPosition)
 	{
@@ -18,7 +20,32 @@ public class Boards {
 		moves.resolveMoves(solved);
 		moves.trimBlocked();
 		states.put(startingPosition, moves);
+		rootPosition = startingPosition;
 	}
+	
+	/**
+	 * Makes a single pass through the map and performs all the trimmings and checks.
+	 * @return true if a complete solution was found
+	 */
+	public boolean iterate()
+	{
+		Set<Board> allBoards = states.keySet();
+		for(Board board : allBoards)
+		{
+			Moves moves = states.get(board);
+			if(moves.hasUnblocked())
+			{
+				moves.trimBlocked();
+				for(int i = 0; i < moves.getNumberOfMoves(); i++)
+				{
+					Move move = moves.getMove(i);
+					checkMove(move, moves.getMoveDepth(), solved);
+				}
+			} else allBoards.remove(board);
+		}
+		return states.get(rootPosition).hasWinner();
+	}
+	
 	
 	/**
 	 * Checks a resolved move against the mapping. Move MUST already be resolved!
@@ -53,6 +80,8 @@ public class Boards {
 					{
 						theseMoves.trimToWinner();
 						move.setStatus(MoveStatus.WINNING);
+						if(solution.meetsTheseConditions(theseMoves.getMove(0).getNextBoard()))	// if this is
+							winFoundAt = numOfMovesOut;	// actually the solution rather than merely a step.
 					}
 					states.put(board, theseMoves);
 				} else move.setStatus(MoveStatus.BLOCKED);
