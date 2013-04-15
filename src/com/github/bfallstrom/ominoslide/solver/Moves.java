@@ -107,7 +107,7 @@ public class Moves {
 			Move move = possibleMoves.get(i);
 			if(move.getStatus() == MoveStatus.BLOCKED)
 			{
-				possibleMoves.remove(i);	// It's a little more coding to do it with indices than reference
+				possibleMoves.remove(i--);	// It's a little more coding to do it with indices than reference
 				anyRemoved = true;			// iterators, but we don't have to do a linear search each time!!
 			}
 		}

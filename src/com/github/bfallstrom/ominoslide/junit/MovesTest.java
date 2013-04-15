@@ -91,17 +91,16 @@ public class MovesTest {
 		MoveStatus testStatus = movesUnderTest.getStatusFromMove(0);
 		assertTrue("Error: Move status is unexpectedly " + testStatus, testStatus == MoveStatus.BLOCKED);
 		assertNull("Error: Board from a blocked move did not get dropped!", movesUnderTest.getBoardFromMove(0));
-		for(int i = 0; i < movesUnderTest.getNumberOfMoves(); i++)
-		{
-			System.out.println("Status of move " + i + ": " + movesUnderTest.getStatusFromMove(i)
-					+ " Omino index = " + movesUnderTest.getMove(i).getOminoIndex()
-					+ " Direction = " + movesUnderTest.getMove(i).getMoveDirection());
-		}
+		testStatus = movesUnderTest.getStatusFromMove(2);
+		assertTrue("Error: Move status is unexpectedly " + testStatus, testStatus == MoveStatus.UNKNOWN);
 	}
 
 	@Test
 	public void testTrimBlocked() {
-		fail("Not yet implemented");
+		movesUnderTest.resolveMoves(solved);
+		assertTrue("Error: No blocked moves removed!", movesUnderTest.trimBlocked());
+		assertFalse("Error: Not all blocked moves removed the first time!", movesUnderTest.trimBlocked());
+		assertTrue("Error: Number of remaining moves unexpectedly " + movesUnderTest.getNumberOfMoves(), movesUnderTest.getNumberOfMoves() == 2);
 	}
 	
 	@Test

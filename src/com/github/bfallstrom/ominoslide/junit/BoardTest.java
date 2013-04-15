@@ -97,7 +97,14 @@ public class BoardTest {
 
 	@Test
 	public void testEqualsObject() {
-		fail("Not yet implemented");
+		assertTrue(boardUnderTest.placeOmino(omino1, Tile.ZERO));
+		assertTrue(boardUnderTest.placeOmino(omino2, Tile.UP));
+		assertTrue(boardUnderTest.placeOmino(omino3, new Tile(2,1)));
+		Board second = new Board(boardLayout);
+		assertTrue(second.placeOmino(omino1, Tile.UP));
+		assertTrue(second.placeOmino(omino2, Tile.ZERO));
+		assertTrue(second.placeOmino(omino3, new Tile(2,1)));
+		assertTrue("Boards with identical layout should be treated as equal!", boardUnderTest.equals(second));
 	}
 
 }
