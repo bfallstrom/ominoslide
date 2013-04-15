@@ -38,7 +38,7 @@ public class Move {
 		leadsTo = new Board(this.startsAt);
 		if(!leadsTo.shiftOmino(piece, direction)) // If the shift fails, then this move is BLOCKED!
 			this.setStatus(MoveStatus.BLOCKED);
-		if(winner.meetsTheseConditions(leadsTo))
+		else if(winner.meetsTheseConditions(leadsTo))
 			this.setStatus(MoveStatus.WINNING);
 		return status;
 	}
@@ -76,5 +76,10 @@ public class Move {
 	public int getOminoIndex()
 	{
 		return piece;
+	}
+	
+	public Direction getMoveDirection()
+	{
+		return this.direction;
 	}
 }

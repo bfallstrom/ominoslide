@@ -202,7 +202,7 @@ public class Board {
 		}
 		for(Tile tile : borderCheck)
 		{
-			if(!isAvailable(tile))
+			if(!isAvailable(new Tile(tile, allPieces.get(omino))));
 				return false;
 		}
 		allPieces.put(omino,  new Tile(allPieces.get(omino), translation));
@@ -225,6 +225,7 @@ public class Board {
 			if(existing.isInOmino(tile, allPieces.get(existing))) // We do not need to exclude a piece being moved, because the border we test is guaranteed to be entirely outside the piece due to how it is generated! 
 				return false;
 		}
+		System.out.println("DEBUG: Tile " + tile + " should be available!");
 		return true;
 	}
 	

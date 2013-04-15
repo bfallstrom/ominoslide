@@ -1,5 +1,8 @@
 package com.github.bfallstrom.ominoslide.areastructure;
 
+import java.util.Collection;
+import java.util.HashMap;
+
 /**
  * A special type of board to store the locations of ominos in a winning position. This
  *  should store ONLY the positions to test, and other ominos should be left out.
@@ -23,9 +26,23 @@ public final class WinningPosition extends Board {
 			throw new IllegalArgumentException("ERROR: Tried to test a win condition on another win condition!");
 		for (int i = 0; i < this.pieceOrder.size(); i++) {
 			Omino o = this.pieceOrder.get(i);
-			if(!(board).allPieces.get(o).equals(this.allPieces.get(o)))
+			if(!(board.allPieces.get(o).equals(this.allPieces.get(o))))
 				return false;
 		}
 		return true;
+	}
+	
+	public WinningPosition(Collection<Tile> tiles)
+	{
+		super(tiles);
+	}
+	
+	public WinningPosition(Board oldBoard)
+	{
+		super(oldBoard);
+	}
+	
+	public WinningPosition() {
+		super();
 	}
 }
