@@ -87,12 +87,20 @@ public class BoardTest {
 	
 	@Test
 	public void testGetLastPieceIndex() {
-		fail("Not yet implemented");
+		assertTrue("Weird: last piece index is " + boardUnderTest.getLastPieceIndex()
+				+ " before anything is moved!", boardUnderTest.getLastPieceIndex() < 0);
+		assertTrue(boardUnderTest.placeOmino(omino3, Tile.ZERO));
+		assertTrue(boardUnderTest.shiftOmino(0, Direction.UP));
+		assertTrue("Error: last piece index is unexpectedly " + boardUnderTest.getLastPieceIndex(),
+				boardUnderTest.getLastPieceIndex() == 0);
 	}
 
 	@Test
 	public void testGetLastPieceObject() {
-		fail("Not yet implemented");
+		assertTrue(boardUnderTest.placeOmino(omino3, Tile.ZERO));
+		assertTrue(boardUnderTest.shiftOmino(0, Direction.UP));
+		assertTrue("Error: last omino reference not identical!", boardUnderTest.getLastPieceObject() == omino3);
+		// Specifically noting that we want to get reference identicality, not compare .equals() here!
 	}
 
 	@Test

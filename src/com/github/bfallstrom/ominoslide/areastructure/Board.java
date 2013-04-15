@@ -206,6 +206,7 @@ public class Board {
 				return false;
 		}
 		allPieces.put(omino,  new Tile(allPieces.get(omino), translation));
+		lastPieceMoved = ominoIndex;
 		return true;
 	}
 	

@@ -105,6 +105,21 @@ public class MovesTest {
 	
 	@Test
 	public void testHasWinner() {
-		fail("Not yet implemented");
+		movesUnderTest.resolveMoves(solved);
+		movesUnderTest.trimBlocked();
+		Board secondMoveBoard = movesUnderTest.getBoardFromMove(0);	// move 0 = omino1 moving LEFT
+		Moves secondMoves = new Moves(secondMoveBoard, 1);
+		secondMoves.resolveMoves(solved);
+		secondMoves.trimBlocked();
+		Board thirdMoveBoard = secondMoves.getBoardFromMove(1);	// move 1 = omino2 moving LEFT
+		Moves thirdMoves = new Moves(thirdMoveBoard, 2);
+		thirdMoves.resolveMoves(solved);
+		thirdMoves.trimBlocked();
+		assertFalse("Error: Somehow found a winner in three moves?!", thirdMoves.hasWinner());
+		Board fourthMoveBoard = thirdMoves.getBoardFromMove(2);	// move 2 = omino3 moving LEFT
+		Moves fourthMoves = new Moves(fourthMoveBoard, 3);
+		fourthMoves.resolveMoves(solved);
+		fourthMoves.trimBlocked();
+		assertTrue("Error: Didn't recognize the potential win on fourth move!", fourthMoves.hasWinner());
 	}
 }
