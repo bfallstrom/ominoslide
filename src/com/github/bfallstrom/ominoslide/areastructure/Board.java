@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.bfallstrom.ominoslide.solver.Move;
+
 public class Board {
 	protected Map<Omino, Tile> allPieces = new HashMap<Omino, Tile>(); // Every piece inserted into the map should
 	protected List<Omino> pieceOrder = new ArrayList<Omino>(); // immediately be inserted into the list as well.
 	
 	protected Set<Tile> layout = new HashSet<Tile>();
 	int lastPieceMoved = -1;
+	
+	Move theMoveThatGotUsHere = null;
 
 	public Board(Board oldBoard)
 	{
@@ -208,6 +212,16 @@ public class Board {
 		allPieces.put(omino,  new Tile(allPieces.get(omino), translation));
 		lastPieceMoved = ominoIndex;
 		return true;
+	}
+	
+	public void setPreviousMove(Move move)
+	{
+		this.theMoveThatGotUsHere = move;
+	}
+	
+	public Move getPreviousMove()
+	{
+		return this.theMoveThatGotUsHere;
 	}
 	
 	

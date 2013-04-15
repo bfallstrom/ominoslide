@@ -36,6 +36,7 @@ public class Move {
 	public MoveStatus resolveMove(WinningPosition winner)
 	{
 		leadsTo = new Board(this.startsAt);
+		leadsTo.setPreviousMove(this);
 		if(!leadsTo.shiftOmino(piece, direction)) // If the shift fails, then this move is BLOCKED!
 			this.setStatus(MoveStatus.BLOCKED);
 		else if(winner.meetsTheseConditions(leadsTo))
@@ -81,5 +82,10 @@ public class Move {
 	public Direction getMoveDirection()
 	{
 		return this.direction;
+	}
+	
+	public Board getStartingBoard()
+	{
+		return this.startsAt;
 	}
 }
