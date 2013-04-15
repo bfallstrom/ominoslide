@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.bfallstrom.ominoslide.areastructure.Board;
+import com.github.bfallstrom.ominoslide.areastructure.Direction;
 import com.github.bfallstrom.ominoslide.areastructure.Omino;
 import com.github.bfallstrom.ominoslide.areastructure.Tile;
 
@@ -80,7 +81,8 @@ public class BoardTest {
 
 	@Test
 	public void testShiftOmino() {
-		fail("Not yet implemented");
+		assertTrue(boardUnderTest.placeOmino(omino3, Tile.ZERO));
+		assertTrue(boardUnderTest.shiftOmino(0, Direction.UP));
 	}
 	
 	@Test
