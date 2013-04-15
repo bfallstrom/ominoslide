@@ -118,11 +118,12 @@ public class Moves {
 	 * Removes all non-winning moves from the list. If there was not a winner or there were no non-
 	 *  winners, returns false; otherwise removes all but the lowest-indexed WINNING move and returns
 	 *  true.
-	 * @return true iff there is now exactly one Move that is a WINNING move in this Moves object.
+	 * @return true if there is now exactly one Move that is a WINNING move in this Moves object, and
+	 *  something had to be trimmed to make it that way.
 	 */
 	public boolean trimToWinner()
 	{
-		if(this.hasWinner() && this.possibleMoves.size() > 1)
+		if(this.possibleMoves.size() > 1 && this.hasWinner())
 		{
 			for(int i = 0; i < possibleMoves.size(); i++)
 			{

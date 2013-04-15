@@ -43,6 +43,10 @@ public class Boards {
 				}
 			} else allBoards.remove(board);
 		}
+		if(states.get(rootPosition).hasWinner())
+			states.get(rootPosition).trimToWinner();
+		if(!states.get(rootPosition).hasUnblocked())
+			throw new RuntimeException("WARNING! This puzzle appears to be unsolvable!");
 		return states.get(rootPosition).hasWinner();
 	}
 	
