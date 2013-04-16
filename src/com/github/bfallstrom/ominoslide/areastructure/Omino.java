@@ -224,4 +224,18 @@ public final class Omino {
 		}
 		return true;
 	}
+	
+	/**
+	 * Helper method for the Board.hashCode method; returns an integer guaranteed to be identical for
+	 *  identical omino layouts, unless one has a unique Id.
+	 */
+	public int getLayoutHash()
+	{
+		int hash = 0;
+		for(Tile tile : shape)
+		{
+			hash += tile.hashCode();
+		}
+		return hash;
+	}
 }

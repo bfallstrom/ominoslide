@@ -274,4 +274,19 @@ public class Board {
 		}
 		return true;
 	}
+	
+	/**
+	 * Overrides hashCode so that two Boards that are considered equal will return the same hash value.
+	 * Note that this is not guaranteed to give different values for unequal Boards--that is why we
+	 * override equals as well.
+	 */
+	public int hashCode()
+	{
+		int hash = 0;
+		for(Omino each : this.pieceOrder)
+		{	// An identically-shaped piece XORed with an identical Tile location makes the same value in the sum.
+			hash += each.getLayoutHash() ^ allPieces.get(each).hashCode();
+		}
+		return hash;
+	}
 }

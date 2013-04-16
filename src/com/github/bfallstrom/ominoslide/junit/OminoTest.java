@@ -54,4 +54,10 @@ public class OminoTest {
 		border = testPiece.getBorderRight();
 		assertTrue(border.contains(new Tile(1,1)));
 	}
+	
+	@Test
+	public void testLayoutHash() {
+		Omino newOmino = new Omino(testPiece);
+		assertTrue("Error: Layout Hashes not equal!", newOmino.getLayoutHash() == testPiece.getLayoutHash());
+	}
 }

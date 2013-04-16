@@ -1,6 +1,10 @@
 package com.github.bfallstrom.ominoslide.solver;
 
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,19 +33,43 @@ public class Boards {
 	 */
 	public boolean iterate()
 	{
-		Set<Board> allBoards = states.keySet();
-		for(Board board : allBoards)
+		List<Board> allBoards;
+		Iterator<Board> iter;
+
+		allBoards = new ArrayList<Board>(states.keySet());	// Can't use the keyset directly because of
+		iter = allBoards.iterator();						//  ConcurrentModificationException!
+		while(iter.hasNext())
 		{
-			Moves moves = states.get(board);
-			if(moves.hasUnblocked())
+			Board board = iter.next();
+			if(states.containsKey(board)) // if it doesn't, the list is outdated and we don't need to handle it!
 			{
-				moves.trimBlocked();
-				for(int i = 0; i < moves.getNumberOfMoves(); i++)
+				Moves moves = states.get(board);
+				if(moves != null && moves.hasUnblocked())
 				{
-					Move move = moves.getMove(i);
-					checkMove(move, moves.getMoveDepth(), solved);
+					moves.trimBlocked();
+					if(moves.hasWinner())
+					{
+						moves.trimToWinner();
+						while(board.getPreviousMove() != null)
+						{
+							board.getPreviousMove().setStatus(MoveStatus.WINNING);
+							board = board.getPreviousMove().getStartingBoard();
+						}
+					} else
+					{
+						for(int i = 0; i < moves.getNumberOfMoves(); i++)
+						{
+							Move move = moves.getMove(i);
+							checkMove(move, moves.getMoveDepth(), solved);
+						}
+					}
+				} else
+				{
+					if(board.getPreviousMove() != null)
+						board.getPreviousMove().setStatus(MoveStatus.BLOCKED);
+					states.remove(board);
 				}
-			} else allBoards.remove(board);
+			}
 		}
 		if(states.get(rootPosition).hasWinner())
 			states.get(rootPosition).trimToWinner();
@@ -64,22 +92,22 @@ public class Boards {
 		if(move.getStatus() == MoveStatus.UNKNOWN)	// If it's not UNKNOWN, we don't need to check anything!
 		{
 			Board board = move.getNextBoard();
-			if(!states.containsKey(board) || states.get(board).getMoveDepth() > numOfMovesOut)
-			{	// Only insert if an equivalent board is not already inserted, or if the equivalent board takes
-				Moves theseMoves;	// more moves to reach.
-				if(move.getOminoIndex() == board.getLastPieceIndex())
+			if(!states.containsKey(board))
+			{	// Only insert if an equivalent board is not already inserted, since we do a breadth-first search.
+				Moves theseMoves;
+				if(move.getOminoIndex() == move.getStartingBoard().getLastPieceIndex())
 					theseMoves = new Moves(board, numOfMovesOut);
 				else theseMoves = new Moves(board, numOfMovesOut+1);
 				theseMoves.resolveMoves(solution);
 				if(theseMoves.hasUnblocked())
 				{
 					theseMoves.trimBlocked();
-					if(states.containsKey(board))
+					/*if(states.containsKey(board))
 					{	// convoluted way of getting the move we're replacing!
 						Move otherMove = states.get(board).getMove(0).getStartingBoard().getPreviousMove();
 						if(otherMove != null)
 							otherMove.setStatus(MoveStatus.BLOCKED);
-					}
+					}*/
 					if(theseMoves.hasWinner())
 					{
 						theseMoves.trimToWinner();
@@ -87,6 +115,7 @@ public class Boards {
 						if(solution.meetsTheseConditions(theseMoves.getMove(0).getNextBoard()))	// if this is
 							winFoundAt = numOfMovesOut;	// actually the solution rather than merely a step.
 					}
+					move.setStatus(MoveStatus.GENERATED);	// so we don't redundantly check except to prune.
 					states.put(board, theseMoves);
 				} else move.setStatus(MoveStatus.BLOCKED);
 			} else move.setStatus(MoveStatus.BLOCKED);

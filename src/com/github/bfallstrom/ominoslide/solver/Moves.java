@@ -135,4 +135,9 @@ public class Moves {
 		}
 		return false;
 	}
+	
+	public String toString()
+	{
+		return "{" + numberOfMovesIn + ":" + possibleMoves.toString() + "}";
+	}
 }

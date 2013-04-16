@@ -88,4 +88,9 @@ public class Move {
 	{
 		return this.startsAt;
 	}
+	
+	public String toString()
+	{
+		return "{" + this.piece + ":" + this.direction.toString() + ":" + this.status.toString() + "}"; 
+	}
 }

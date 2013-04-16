@@ -13,6 +13,7 @@ import com.github.bfallstrom.ominoslide.areastructure.Board;
 import com.github.bfallstrom.ominoslide.areastructure.Omino;
 import com.github.bfallstrom.ominoslide.areastructure.Tile;
 import com.github.bfallstrom.ominoslide.areastructure.WinningPosition;
+import com.github.bfallstrom.ominoslide.solver.Boards;
 
 public class BoardsTest {
 	public static List<Tile> boardLayout = new ArrayList<Tile>();
@@ -23,6 +24,8 @@ public class BoardsTest {
 	public static Omino omino2;
 	public static Omino omino3;
 	public static WinningPosition solved;
+	
+	public Boards solver;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -53,7 +56,20 @@ public class BoardsTest {
 
 	@Test
 	public void testIterate() {
-		fail("Not yet implemented");
+		solver = new Boards(masterBoard, solved);
+		int i = 0;
+		try 
+		{
+			while(!solver.iterate())
+			{
+				System.out.println("Iteration #: " + ++i);
+			}
+			System.out.println("Solution found at iteration " + i + "!");
+		} catch(RuntimeException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 	}
 
 }
