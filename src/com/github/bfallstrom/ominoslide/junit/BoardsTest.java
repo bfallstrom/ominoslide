@@ -65,6 +65,7 @@ public class BoardsTest {
 				System.out.println("Iteration #: " + ++i);
 			}
 			System.out.println("Solution found at iteration " + i + "!");
+			System.out.println(solver.getSolution());
 		} catch(RuntimeException e)
 		{
 			e.printStackTrace();

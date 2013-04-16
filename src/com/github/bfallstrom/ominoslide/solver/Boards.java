@@ -78,6 +78,27 @@ public class Boards {
 		return states.get(rootPosition).hasWinner();
 	}
 	
+	/**
+	 * Gets the solution and returns it as a List of Move objects. Each in sequence takes you from
+	 *  one Board to the next, starting at the first Board.
+	 * @return the solution in List<Move> form.
+	 */
+	public List<Move> getSolution()
+	{
+		List<Move> solution = new ArrayList<Move>();
+		Board board = rootPosition;
+		while(states.containsKey(board))
+		{
+			Moves moves = states.get(board);
+			if(!moves.hasWinner())
+				throw new RuntimeException("WARNING! You must complete solving before getting the solution!");
+			moves.trimToWinner();
+			solution.add(moves.getMove(0));
+			board = moves.getMove(0).getNextBoard();
+		}
+		return solution;
+	}
+	
 	
 	/**
 	 * Checks a resolved move against the mapping. Move MUST already be resolved!
