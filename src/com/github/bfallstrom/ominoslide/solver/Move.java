@@ -10,6 +10,7 @@ public class Move {
 	private MoveStatus status = MoveStatus.UNKNOWN;
 	private Direction direction = null;
 	private int piece;
+	private int depthFound = Integer.MAX_VALUE;	// A way to record the depth at which a winning solution was found.
 	
 
 	/**
@@ -45,15 +46,6 @@ public class Move {
 	}
 	
 	/**
-	 * Gets the current status of this Move without resolving it.
-	 * @return The current status.
-	 */
-	public MoveStatus getStatus()
-	{
-		return status;
-	}
-	
-	/**
 	 * Sets the current status of this Move. Should only be used based on a known resolution:
 	 *  eg. marking a move as WINNING when it is known to lead to a winning position later, or
 	 *  marking a move as BLOCKED when all possible moves after it are marked as BLOCKED.
@@ -67,6 +59,42 @@ public class Move {
 		this.status = newStatus;
 		if(newStatus == MoveStatus.BLOCKED)
 			this.leadsTo = null;	// If we are rejecting this move, drop the Board reference it leads to.
+		if(newStatus != MoveStatus.WINNING)
+			this.depthFound = Integer.MAX_VALUE;
+	}
+	
+	/**
+	 * Sets a depth at which a solution was found. From the Move's point of view, this is purely
+	 *  informational and serves only to optimize solutions. It is unset when a status other than
+	 *  WINNING is set on the move; unset is defined as maximum integer value as it is then less
+	 *  optimal than any other value.
+	 * This is not the depth at which the move exists; that is more properly in the Moves class.
+	 *  Instead, this represents the Moves depth at which a solution was found when applying the
+	 *  WINNING status to this Move, even if this Move is closer to the start than that winning
+	 *  move.
+	 * @param depth The move depth to set.
+	 */
+	public void setDepth(int depth)
+	{
+		this.depthFound = depth;
+	}
+	
+	/**
+	 * Gets the current status of this Move without resolving it.
+	 * @return The current status.
+	 */
+	public MoveStatus getStatus()
+	{
+		return status;
+	}
+	
+	/**
+	 * Gets the depth at which a solution was found. See the description for setDepth(int) for more information.
+	 * @return The depth at which a solution was found.
+	 */
+	public int getDepth()
+	{
+		return this.depthFound;
 	}
 	
 	public Board getNextBoard()

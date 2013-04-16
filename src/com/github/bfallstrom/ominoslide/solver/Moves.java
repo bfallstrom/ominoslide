@@ -116,24 +116,43 @@ public class Moves {
 	
 	/**
 	 * Removes all non-winning moves from the list. If there was not a winner or there were no non-
-	 *  winners, returns false; otherwise removes all but the lowest-indexed WINNING move and returns
-	 *  true.
-	 * @return true if there is now exactly one Move that is a WINNING move in this Moves object, and
+	 *  winners, returns false; otherwise removes all non-WINNING moves and returns true.
+	 * @return true if there are now only Moves that are WINNING moves in this Moves object, and
 	 *  something had to be trimmed to make it that way.
 	 */
-	public boolean trimToWinner()
+	public boolean trimToWinners()
 	{
-		if(this.possibleMoves.size() > 1 && this.hasWinner())
+		if(this.hasWinner())
 		{
+			boolean anyRemoved = false;
 			for(int i = 0; i < possibleMoves.size(); i++)
 			{
 				Move move = possibleMoves.get(i);
 				if(move.getStatus() != MoveStatus.WINNING)
+				{
 					possibleMoves.remove(i--);
+					anyRemoved = true;
+				}
 			}
-			return true;
+			return anyRemoved;
 		}
 		return false;
+	}
+	
+	/**
+	 * Retrieves the winning move with the lowest depth level. Returns null if there are no winners.
+	 * @return The winning move with the lowest depth level, or null if none exists.
+	 */
+	public Move getOptimalWin()
+	{
+		Move win = null;
+		for(int i = 0; i < possibleMoves.size(); i++)
+		{
+			Move move = possibleMoves.get(i);
+			if(move.getStatus() == MoveStatus.WINNING && (win == null || win.getDepth() > move.getDepth()))
+				win = move;
+		}
+		return win;
 	}
 	
 	public String toString()

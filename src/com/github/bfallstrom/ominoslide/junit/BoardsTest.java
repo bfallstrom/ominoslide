@@ -14,6 +14,7 @@ import com.github.bfallstrom.ominoslide.areastructure.Omino;
 import com.github.bfallstrom.ominoslide.areastructure.Tile;
 import com.github.bfallstrom.ominoslide.areastructure.WinningPosition;
 import com.github.bfallstrom.ominoslide.solver.Boards;
+import com.github.bfallstrom.ominoslide.solver.Move;
 
 public class BoardsTest {
 	public static List<Tile> boardLayout = new ArrayList<Tile>();
@@ -65,7 +66,10 @@ public class BoardsTest {
 				System.out.println("Iteration #: " + ++i);
 			}
 			System.out.println("Solution found at iteration " + i + "!");
-			System.out.println(solver.getSolution());
+			List<Move> solution = solver.getSolution();
+			System.out.println(solution);
+			System.out.println(solution.get(0).getDepth());
+			
 		} catch(RuntimeException e)
 		{
 			e.printStackTrace();

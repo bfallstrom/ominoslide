@@ -47,32 +47,25 @@ public class Boards {
 				if(moves != null && moves.hasUnblocked())
 				{
 					moves.trimBlocked();
-					if(moves.hasWinner())
+					for(int i = 0; i < moves.getNumberOfMoves(); i++)
 					{
-						moves.trimToWinner();
-						while(board.getPreviousMove() != null)
-						{
-							board.getPreviousMove().setStatus(MoveStatus.WINNING);
-							board = board.getPreviousMove().getStartingBoard();
-						}
-					} else
-					{
-						for(int i = 0; i < moves.getNumberOfMoves(); i++)
-						{
-							Move move = moves.getMove(i);
-							checkMove(move, moves.getMoveDepth(), solved);
-						}
+						Move move = moves.getMove(i);
+						checkMove(move, moves.getMoveDepth(), solved);
 					}
 				} else
 				{
 					if(board.getPreviousMove() != null)
+					{
 						board.getPreviousMove().setStatus(MoveStatus.BLOCKED);
-					states.remove(board);
+						states.remove(board);
+					}
 				}
 			}
 		}
+		
+		
 		if(states.get(rootPosition).hasWinner())
-			states.get(rootPosition).trimToWinner();
+			states.get(rootPosition).trimToWinners();
 		if(!states.get(rootPosition).hasUnblocked())
 			throw new RuntimeException("WARNING! This puzzle appears to be unsolvable!");
 		return states.get(rootPosition).hasWinner();
@@ -92,9 +85,10 @@ public class Boards {
 			Moves moves = states.get(board);
 			if(!moves.hasWinner())
 				throw new RuntimeException("WARNING! You must complete solving before getting the solution!");
-			moves.trimToWinner();
-			solution.add(moves.getMove(0));
-			board = moves.getMove(0).getNextBoard();
+			moves.trimToWinners();
+			Move move = moves.getOptimalWin();
+			solution.add(move);
+			board = move.getNextBoard();
 		}
 		return solution;
 	}
@@ -108,17 +102,19 @@ public class Boards {
 	 */
 	private void checkMove(Move move, int numOfMovesOut, WinningPosition solution)
 	{
+		if(move.getOminoIndex() != move.getStartingBoard().getLastPieceIndex())
+			numOfMovesOut++;
 		if(numOfMovesOut > winFoundAt)	// If a win was already found with fewer moves, cut this out.
 			move.setStatus(MoveStatus.BLOCKED);
-		if(move.getStatus() == MoveStatus.UNKNOWN)	// If it's not UNKNOWN, we don't need to check anything!
+		else if(move.getStatus() == MoveStatus.UNKNOWN)	
 		{
 			Board board = move.getNextBoard();
-			if(!states.containsKey(board))
+			if(states.containsKey(board) && numOfMovesOut >= states.get(board).getMoveDepth())
+			{
+				move.setStatus(MoveStatus.BLOCKED);
+			} else if(!states.containsKey(board)) 
 			{	// Only insert if an equivalent board is not already inserted, since we do a breadth-first search.
-				Moves theseMoves;
-				if(move.getOminoIndex() == move.getStartingBoard().getLastPieceIndex())
-					theseMoves = new Moves(board, numOfMovesOut);
-				else theseMoves = new Moves(board, numOfMovesOut+1);
+				Moves theseMoves = new Moves(board, numOfMovesOut);
 				theseMoves.resolveMoves(solution);
 				if(theseMoves.hasUnblocked())
 				{
@@ -131,15 +127,63 @@ public class Boards {
 					}*/
 					if(theseMoves.hasWinner())
 					{
-						theseMoves.trimToWinner();
 						move.setStatus(MoveStatus.WINNING);
-						if(solution.meetsTheseConditions(theseMoves.getMove(0).getNextBoard()))	// if this is
-							winFoundAt = numOfMovesOut;	// actually the solution rather than merely a step.
-					}
-					move.setStatus(MoveStatus.GENERATED);	// so we don't redundantly check except to prune.
+						if(solution.meetsTheseConditions(theseMoves.getOptimalWin().getNextBoard()))	// if this is
+						{					// actually the solution rather than merely a step along the way.
+							theseMoves.trimToWinners();
+							theseMoves.getOptimalWin().setDepth(numOfMovesOut);
+							Board iterBoard = board;
+							while(iterBoard.getPreviousMove() != null && iterBoard.getPreviousMove().getDepth() > numOfMovesOut)
+							{
+								iterBoard.getPreviousMove().setStatus(MoveStatus.WINNING);
+								iterBoard.getPreviousMove().setDepth(numOfMovesOut);
+								iterBoard = iterBoard.getPreviousMove().getStartingBoard();
+							}
+							winFoundAt = numOfMovesOut;
+						}
+					} else
+						move.setStatus(MoveStatus.GENERATED);	// so we don't redundantly check except to prune.
 					states.put(board, theseMoves);
 				} else move.setStatus(MoveStatus.BLOCKED);
-			} else move.setStatus(MoveStatus.BLOCKED);
+			} else if(states.containsKey(board))
+			{
+				if(!states.get(board).hasUnblocked())
+					move.setStatus(MoveStatus.BLOCKED);
+			}
+			
+			
+			/* else if(states.get(board).getMoveDepth() > numOfMovesOut)	// If we can get to an equivalent
+			{									// board in fewer steps, then we shall replace that path!
+				Moves theseMoves;
+				theseMoves = new Moves(board, numOfMovesOut);
+				theseMoves.resolveMoves(solution);
+				if(theseMoves.hasUnblocked())
+				{
+					theseMoves.trimBlocked();
+					if(theseMoves.hasWinner())
+					{
+						move.setStatus(MoveStatus.WINNING);
+						if(solution.meetsTheseConditions(theseMoves.getMove(0).getNextBoard()))	// if this is
+						{					// actually the solution rather than merely a step along the way.
+							theseMoves.trimToWinners();
+							theseMoves.getMove(0).setDepth(numOfMovesOut);
+							while(board.getPreviousMove() != null)
+							{
+								board.getPreviousMove().setStatus(MoveStatus.WINNING);
+								if(board.getPreviousMove().getDepth() > numOfMovesOut)
+									board.getPreviousMove().setDepth(numOfMovesOut);
+								board = board.getPreviousMove().getStartingBoard();
+							}
+							winFoundAt = numOfMovesOut;
+						}
+					}
+					move.setStatus(MoveStatus.GENERATED);	// so we don't redundantly check except to prune.
+					Move otherMove = states.get(board).getMove(0).getStartingBoard().getPreviousMove();
+					if(otherMove != null)
+						otherMove.setStatus(MoveStatus.BLOCKED);
+					states.put(board, theseMoves);
+				} else move.setStatus(MoveStatus.BLOCKED);
+			}*/
 		}
 	}
 }
