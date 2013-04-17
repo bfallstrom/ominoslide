@@ -1,7 +1,7 @@
 package com.github.bfallstrom.ominoslide.areastructure;
 
 // Represents a single tile on the board or as a piece of a sliding part
-public final class Tile implements Cloneable {
+public final class Tile implements Cloneable, Comparable<Tile> {
 	private final int xCoord;
 	private final int yCoord;
 	//private final TilePart tileType;
@@ -88,6 +88,13 @@ public final class Tile implements Cloneable {
 		{
 			return (this.xCoord == ((Tile)o).getX()) && (this.yCoord == ((Tile)o).getY());
 		} else return false;
+	}
+	
+	public int compareTo(Tile o)
+	{
+		if(this.xCoord != o.xCoord)
+			return this.xCoord - o.xCoord;	// Returns the difference in x coordinate if there is a difference
+		return this.yCoord - o.yCoord;		// Otherwise returns the difference in y coordinate.
 	}
 	
 	public String toString()
