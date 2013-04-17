@@ -76,5 +76,45 @@ public class BoardsTest {
 			fail(e.getMessage());
 		}
 	}
-
+	
+	@Test
+	public void testOptimize() {
+		List<Tile> layout2 = new ArrayList<Tile>();
+		layout2.add(new Tile(0,0));
+		layout2.add(new Tile(1,0));
+		layout2.add(new Tile(2,0));
+		layout2.add(new Tile(0,1));
+		layout2.add(new Tile(1,1));
+		layout2.add(new Tile(2,1));
+		layout2.add(new Tile(0,2));
+		layout2.add(new Tile(1,2));
+		layout2.add(new Tile(2,2));
+		layout2.add(new Tile(3,2));
+		Omino omino4 = new Omino(ominoStyle1);
+		Board board2 = new Board(layout2);
+		assertTrue("Initialization error!", board2.placeOmino(omino1, new Tile(1,0)));
+		assertTrue("Initialization error!", board2.placeOmino(omino2, new Tile(1,1)));
+		assertTrue("Initialization error!", board2.placeOmino(omino3, new Tile(3,2)));
+		assertTrue("Initialization error!", board2.placeOmino(omino4, new Tile(1,2)));
+		WinningPosition win2 = new WinningPosition(layout2);
+		assertTrue("Initialization error!", win2.placeOmino(omino3, new Tile(2,0)));
+		solver = new Boards(board2, win2);
+		int i = 0;
+		try 
+		{
+			while(!solver.iterate())
+			{
+				System.out.println("Iteration #: " + ++i);
+			}
+			System.out.println("Solution found at iteration " + i + "!");
+			List<Move> solution = solver.getSolution();
+			System.out.println(solution);
+			System.out.println(solution.get(0).getDepth());
+			
+		} catch(RuntimeException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 }

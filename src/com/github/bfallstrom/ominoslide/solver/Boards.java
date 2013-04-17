@@ -109,13 +109,13 @@ public class Boards {
 		else if(move.getStatus() == MoveStatus.UNKNOWN)	
 		{
 			Board board = move.getNextBoard();
+			Moves theseMoves = new Moves(board, numOfMovesOut);
+			theseMoves.resolveMoves(solution);
 			if(states.containsKey(board) && numOfMovesOut >= states.get(board).getMoveDepth())
 			{
 				move.setStatus(MoveStatus.BLOCKED);
 			} else if(!states.containsKey(board)) 
 			{	// Only insert if an equivalent board is not already inserted, since we do a breadth-first search.
-				Moves theseMoves = new Moves(board, numOfMovesOut);
-				theseMoves.resolveMoves(solution);
 				if(theseMoves.hasUnblocked())
 				{
 					theseMoves.trimBlocked();
@@ -149,6 +149,34 @@ public class Boards {
 			{
 				if(!states.get(board).hasUnblocked())
 					move.setStatus(MoveStatus.BLOCKED);
+				// begin experimental optimization
+				else if(states.get(board).getMoveDepth() > numOfMovesOut && theseMoves.hasUnblocked())
+				{	// If we have a more optimal solution, use it!
+					theseMoves.trimBlocked();	// convoluted way of getting the move we're replacing
+					Move otherMove = states.get(board).getMove(0).getStartingBoard().getPreviousMove();
+					if(otherMove != null)
+						otherMove.setStatus(MoveStatus.BLOCKED);
+					if(theseMoves.hasWinner())
+					{
+						move.setStatus(MoveStatus.WINNING);
+						if(solution.meetsTheseConditions(theseMoves.getOptimalWin().getNextBoard()))	// if this is
+						{					// actually the solution rather than merely a step along the way.
+							theseMoves.trimToWinners();
+							theseMoves.getOptimalWin().setDepth(numOfMovesOut);
+							Board iterBoard = board;
+							while(iterBoard.getPreviousMove() != null && iterBoard.getPreviousMove().getDepth() > numOfMovesOut)
+							{
+								iterBoard.getPreviousMove().setStatus(MoveStatus.WINNING);
+								iterBoard.getPreviousMove().setDepth(numOfMovesOut);
+								iterBoard = iterBoard.getPreviousMove().getStartingBoard();
+							}
+							winFoundAt = numOfMovesOut;
+						}
+					} else
+						move.setStatus(MoveStatus.GENERATED);	// so we don't redundantly check except to prune.
+					states.put(board, theseMoves);
+				}	// end experimental optimization
+				else move.setStatus(MoveStatus.BLOCKED);
 			}
 			
 			
