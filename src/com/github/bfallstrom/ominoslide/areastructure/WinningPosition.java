@@ -1,7 +1,6 @@
 package com.github.bfallstrom.ominoslide.areastructure;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * A special type of board to store the locations of ominos in a winning position. This

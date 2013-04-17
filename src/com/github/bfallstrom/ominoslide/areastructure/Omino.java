@@ -232,6 +232,8 @@ public final class Omino {
 	public int getLayoutHash()
 	{
 		int hash = 0;
+		if(this.uniqueId != null)
+			hash = this.uniqueId;
 		for(Tile tile : shape)
 		{
 			hash += tile.hashCode();

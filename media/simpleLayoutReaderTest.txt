@@ -1,0 +1,11 @@
+// This is the starting arrangement; '//' denotes a comment line.
+##A.# // Comments can also come at the end of a line. Spaces are to be ignored.
+##B.#
+*****
+// The row of ***s separates the win condition from the initial layout.
+// The layouts can differ in their representation but must parse as identical.
+// All ominos must also have the exact same shape. This file should parse correctly.
+// The negative test files should throw exceptions when parsed.
+###
+#B.
+#A. 
