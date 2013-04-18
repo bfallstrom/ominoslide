@@ -117,12 +117,6 @@ public class Boards {
 				if(theseMoves.hasUnblocked())
 				{
 					theseMoves.trimBlocked();
-					/*if(states.containsKey(board))
-					{	// convoluted way of getting the move we're replacing!
-						Move otherMove = states.get(board).getMove(0).getStartingBoard().getPreviousMove();
-						if(otherMove != null)
-							otherMove.setStatus(MoveStatus.BLOCKED);
-					}*/
 					if(theseMoves.hasWinner())
 					{
 						move.setStatus(MoveStatus.WINNING);
@@ -176,40 +170,6 @@ public class Boards {
 				}	// end experimental optimization
 				else move.setStatus(MoveStatus.BLOCKED);
 			}
-			
-			
-			/* else if(states.get(board).getMoveDepth() > numOfMovesOut)	// If we can get to an equivalent
-			{									// board in fewer steps, then we shall replace that path!
-				Moves theseMoves;
-				theseMoves = new Moves(board, numOfMovesOut);
-				theseMoves.resolveMoves(solution);
-				if(theseMoves.hasUnblocked())
-				{
-					theseMoves.trimBlocked();
-					if(theseMoves.hasWinner())
-					{
-						move.setStatus(MoveStatus.WINNING);
-						if(solution.meetsTheseConditions(theseMoves.getMove(0).getNextBoard()))	// if this is
-						{					// actually the solution rather than merely a step along the way.
-							theseMoves.trimToWinners();
-							theseMoves.getMove(0).setDepth(numOfMovesOut);
-							while(board.getPreviousMove() != null)
-							{
-								board.getPreviousMove().setStatus(MoveStatus.WINNING);
-								if(board.getPreviousMove().getDepth() > numOfMovesOut)
-									board.getPreviousMove().setDepth(numOfMovesOut);
-								board = board.getPreviousMove().getStartingBoard();
-							}
-							winFoundAt = numOfMovesOut;
-						}
-					}
-					move.setStatus(MoveStatus.GENERATED);	// so we don't redundantly check except to prune.
-					Move otherMove = states.get(board).getMove(0).getStartingBoard().getPreviousMove();
-					if(otherMove != null)
-						otherMove.setStatus(MoveStatus.BLOCKED);
-					states.put(board, theseMoves);
-				} else move.setStatus(MoveStatus.BLOCKED);
-			}*/
 		}
 	}
 }

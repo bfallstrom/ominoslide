@@ -303,7 +303,6 @@ public class Board {
 			if(existing.isInOmino(tile, allPieces.get(existing))) // We do not need to exclude a piece being moved, because the border we test is guaranteed to be entirely outside the piece due to how it is generated! 
 				return false;
 		}
-		//System.out.println("DEBUG: Tile " + tile + " should be available!");
 		return true;
 	}
 	

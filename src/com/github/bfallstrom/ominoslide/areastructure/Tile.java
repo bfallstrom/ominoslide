@@ -4,8 +4,6 @@ package com.github.bfallstrom.ominoslide.areastructure;
 public final class Tile implements Cloneable, Comparable<Tile> {
 	private final int xCoord;
 	private final int yCoord;
-	//private final TilePart tileType;
-	//private Omino piece;	// Removed since relative/absolute tiles are now determined from context
 	
 	public static final Tile UP		= new Tile( 0, 1);
 	public static final Tile DOWN	= new Tile( 0,-1);
@@ -13,25 +11,12 @@ public final class Tile implements Cloneable, Comparable<Tile> {
 	public static final Tile RIGHT	= new Tile( 1, 0);
 	public static final Tile ZERO	= new Tile( 0, 0);
 	
-	//public Tile(int x, int y, TilePart type)
 	public Tile(int x, int y)
 	{
 		this.xCoord = x;
 		this.yCoord = y;
-	//	this.tileType = type;
-		//this.piece = null;
 	}
 	
-	//public Tile(int x, int y, TilePart type, Omino piecePart)
-	/*public Tile(int x, int y, Omino piecePart)
-	{
-	//	this(x, y, type);
-		this(x, y);
-	//	if(type == TilePart.OMINO)
-			this.piece = piecePart;	// otherwise defaults to null for the piece link
-	}*/
-	
-	// replicates a tile without cloning the Omino reference
 	public Tile(Tile sameTile)
 	{
 		this(sameTile, ZERO);
@@ -53,14 +38,7 @@ public final class Tile implements Cloneable, Comparable<Tile> {
 	{
 		return new Tile(this.xCoord - diffThisTile.xCoord, this.yCoord - diffThisTile.yCoord);
 	}
-	
-	/*
-	public TilePart getType()
-	{
-		return this.tileType;
-	}
-	*/
-	
+
 	public int getX()
 	{
 		return this.xCoord;
@@ -70,18 +48,7 @@ public final class Tile implements Cloneable, Comparable<Tile> {
 	{
 		return this.yCoord;
 	}
-	
-	/*
-	public Omino getPiece() // gets the associated Omino piece this is a part of; returns null if it's not an Omino piece
-	{
-		return this.piece;
-	}
-	
-	public void setPiece(Omino newPiece) // Sets the associated Omino piece... USE WITH CAUTION
-	{
-		this.piece = newPiece; // If used any time other than cloning an Omino, this could cause unstable behavior.
-	}*/
-	
+
 	public boolean equals(Object o)
 	{
 		if(o instanceof Tile)
@@ -99,7 +66,6 @@ public final class Tile implements Cloneable, Comparable<Tile> {
 	
 	public String toString()
 	{
-		//return "{x:" + this.xCoord + ",y:" + this.yCoord + ",piece:\"" + ((this.piece==null)?"null":"omino") + "\"}";
 		return "{x:" + this.xCoord + ",y:" + this.yCoord + "}";
 	}
 	

@@ -13,7 +13,6 @@ public class BoardViewPlaintext {
 	// To allow display of puzzles requiring more than 62 pieces, add additional unique characters to PIECES.
 	// This will also require updating LayoutFileReader.charactersToAccept to allow these characters as input!
 	
-	private Board sourceBoard;
 	private Tile lowerLeft;
 	private Tile boardSize;
 	private String[] boardVisual;
@@ -23,7 +22,6 @@ public class BoardViewPlaintext {
 	{
 		if(board == null)
 			throw new IllegalArgumentException("Error: null board cannot be viewed.");
-		this.sourceBoard = board;
 		lowerLeft = board.getLowerLeftBound();
 		boardSize = board.getUpperRightBound().minus(lowerLeft);	// actually size -1 in both directions
 		boardVisual = new String[boardSize.getY()+1];

@@ -123,17 +123,10 @@ public class BoardsTest {
 	@Test
 	public void testBoardsSolverAndView() {
 		solver = new Boards(masterBoard, solved);
-		//int i = 0;
 		try 
 		{
-			while(!solver.iterate())
-			{
-				//System.out.println("Iteration #: " + ++i);
-			}
-			//System.out.println("Solution found at iteration " + i + "!");
+			while(!solver.iterate());
 			List<Move> solution = solver.getSolution();
-			//System.out.println(solution);
-			//System.out.println(solution.get(0).getDepth());
 			System.out.println(new BoardViewPlaintext(solution.get(0).getStartingBoard()));
 			for(int i = 0; i < solution.size(); i++)
 			{

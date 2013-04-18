@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,7 +51,6 @@ public class LayoutFileReader {
 	 */
 	private static final String			charactersToAccept = ".#A-Za-z0-9";
 	
-	private List<String> inputLines = new ArrayList<String>();
 	private Map<Character,Set<Tile>> wholeLayout1 = new HashMap<Character,Set<Tile>>();	// initial layout
 	private Map<Character,Set<Tile>> wholeLayout2 = new HashMap<Character,Set<Tile>>();	// winning layout
 	private Map<Character,Set<Tile>> startingOminos = new HashMap<Character,Set<Tile>>();
@@ -93,7 +90,7 @@ public class LayoutFileReader {
 					if(currentLine.charAt(0) == '*' && layoutToUse == wholeLayout1)
 						layoutToUse = wholeLayout2;
 					else if(currentLine.charAt(0) == '*')
-						throw new RuntimeException("Parse error: More than one * line!");
+						throw new IllegalArgumentException("Parse error: More than one * line!");
 					else if(pushLineToSet(currentLine, layoutToUse, i))
 						i--;	// Y coordinates must be descending as the file is read top to bottom
 				}
@@ -103,6 +100,37 @@ public class LayoutFileReader {
 			throw new IllegalArgumentException(e.getMessage() + " at line #" + (-i));
 		}
 		// Now parse the wholeLayouts to the Board and WinningPosition.
+		parseLayouts();
+	}
+	
+	/**
+	 * Gets the initial Board read from the file.
+	 * @return The Board read from the file.
+	 */
+	public Board getStartingBoard()
+	{
+		if(startingBoard == null)
+			throw new RuntimeException("Error: Board not initialized!");
+		return startingBoard;
+	}
+	
+	/**
+	 * Gets the WinningPosition read from the file.
+	 * @return The WinningPosition read from the file.
+	 */
+	public WinningPosition getWinningBoard()
+	{
+		if(winningBoard == null)
+			throw new RuntimeException("Error: Board not initialized!");
+		return winningBoard;
+	}
+	
+	/**
+	 * Parses wholeLayout1 into the initial layout, and wholeLayout2 into the winning position.
+	 * Throws exceptions if there are errors in the input.
+	 */
+	private void parseLayouts()
+	{
 		Set<Character> letters = wholeLayout1.keySet();
 		for(Character eachLetter : letters)
 		{
@@ -162,37 +190,6 @@ public class LayoutFileReader {
 			if(!startingBoard.placeOmino(initOmino, ominoZero.minus(layoutZero)))
 				throw new RuntimeException("Placement of omino " + eachLetter + " failed--parse algorithm must need fixing!");
 		}
-	}
-	
-	/**
-	 * Gets the initial Board read from the file.
-	 * @return The Board read from the file.
-	 */
-	public Board getStartingBoard()
-	{
-		if(startingBoard == null)
-			throw new RuntimeException("Error: Board not initialized!");
-		return startingBoard;
-	}
-	
-	/**
-	 * Gets the WinningPosition read from the file.
-	 * @return The WinningPosition read from the file.
-	 */
-	public WinningPosition getWinningBoard()
-	{
-		if(winningBoard == null)
-			throw new RuntimeException("Error: Board not initialized!");
-		return winningBoard;
-	}
-	
-	/**
-	 * Parses wholeLayout1 into the initial layout, and wholeLayout2 into the winning position.
-	 * Throws exceptions if there are errors in the input.
-	 */
-	private static void parseLayouts()
-	{
-		throw new RuntimeException("NYI");
 	}
 	
 	/**
