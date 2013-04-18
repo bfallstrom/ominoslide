@@ -15,6 +15,7 @@ import com.github.bfallstrom.ominoslide.areastructure.Tile;
 import com.github.bfallstrom.ominoslide.areastructure.WinningPosition;
 import com.github.bfallstrom.ominoslide.solver.Boards;
 import com.github.bfallstrom.ominoslide.solver.Move;
+import com.github.bfallstrom.ominoslide.view.BoardViewPlaintext;
 
 public class BoardsTest {
 	public static List<Tile> boardLayout = new ArrayList<Tile>();
@@ -110,6 +111,35 @@ public class BoardsTest {
 			List<Move> solution = solver.getSolution();
 			System.out.println(solution);
 			System.out.println(solution.get(0).getDepth());
+			
+		} catch(RuntimeException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	// This should be replaced when a suitable solution viewer similar to this is created.
+	@Test
+	public void testBoardsSolverAndView() {
+		solver = new Boards(masterBoard, solved);
+		//int i = 0;
+		try 
+		{
+			while(!solver.iterate())
+			{
+				//System.out.println("Iteration #: " + ++i);
+			}
+			//System.out.println("Solution found at iteration " + i + "!");
+			List<Move> solution = solver.getSolution();
+			//System.out.println(solution);
+			//System.out.println(solution.get(0).getDepth());
+			System.out.println(new BoardViewPlaintext(solution.get(0).getStartingBoard()));
+			for(int i = 0; i < solution.size(); i++)
+			{
+				System.out.println();
+				System.out.println(new BoardViewPlaintext(solution.get(i).getNextBoard()));
+			}
 			
 		} catch(RuntimeException e)
 		{

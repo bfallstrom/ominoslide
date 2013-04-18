@@ -64,16 +64,6 @@ public final class Omino {
 	 */
 	private boolean isInOmino(Tile testTile)
 	{
-		/*if(testTile.getPiece() != null && testTile.getPiece() != this)
-		{
-			return this.isInOmino(new Tile(testTile.getX() + testTile.getPiece().pieceOrigin.getX(),
-					testTile.getY() + testTile.getPiece().pieceOrigin.getY()));
-		} else if(testTile.getPiece() == null)
-		{
-			return this.isInOmino(new Tile(testTile.getX() - this.pieceOrigin.getX(),
-					testTile.getY() - this.pieceOrigin.getY(),
-					this));
-		} else*/			
 			return shape.contains(testTile);
 	}
 	
@@ -90,13 +80,12 @@ public final class Omino {
 	}
 	
 	/**
-	 * WARNING: Do not mutate the shape set after the reference is returned; doing so could lead to unstable
-	 *   behavior. Letting the reference leave the class at all is only allowed for memory efficiency.
+	 * Gets a shallow copy of the tile set of this omino.
 	 * @return The tiles contained in this omino.
 	 */
 	public Set<Tile> getShape()
 	{
-		return this.shape;
+		return new HashSet<Tile>(this.shape);
 	}
 	
 	/**
@@ -109,43 +98,39 @@ public final class Omino {
 	}
 	
 	/**
-	 * WARNING: Do not mutate the border set after the reference is returned; doing so could lead to unstable
-	 *   behavior. Letting the reference leave the class at all is only allowed for memory efficiency.
+	 * Gets a shallow copy of the upper border.
 	 * @return The tiles contained in the upper border to this omino.
 	 */
 	public Set<Tile> getBorderUp()
 	{
-		return this.borderUp;
+		return new HashSet<Tile>(this.borderUp);
 	}
 	
 	/**
-	 * WARNING: Do not mutate the border set after the reference is returned; doing so could lead to unstable
-	 *   behavior. Letting the reference leave the class at all is only allowed for memory efficiency.
+	 * Gets a shallow copy of the lower border.
 	 * @return The tiles contained in the lower border to this omino.
 	 */
 	public Set<Tile> getBorderDown()
 	{
-		return this.borderDown;
+		return new HashSet<Tile>(this.borderDown);
 	}
 	
 	/**
-	 * WARNING: Do not mutate the border set after the reference is returned; doing so could lead to unstable
-	 *   behavior. Letting the reference leave the class at all is only allowed for memory efficiency.
+	 * Gets a shallow copy of the left border.
 	 * @return The tiles contained in the left border to this omino.
 	 */
 	public Set<Tile> getBorderLeft()
 	{
-		return this.borderLeft;
+		return new HashSet<Tile>(this.borderLeft);
 	}
 	
 	/**
-	 * WARNING: Do not mutate the border set after the reference is returned; doing so could lead to unstable
-	 *   behavior. Letting the reference leave the class at all is only allowed for memory efficiency.
+	 * Gets a shallow copy of the right border.
 	 * @return The tiles contained in the right border to this omino.
 	 */
 	public Set<Tile> getBorderRight()
 	{
-		return this.borderRight;
+		return new HashSet<Tile>(this.borderRight);
 	}
 	
 	/**

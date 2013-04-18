@@ -155,6 +155,18 @@ public class Board {
 	}
 	
 	/**
+	 * Gets the omino at the specific index, or null if the index is invalid.
+	 * @param index The index in the internal list of the omino to search for.
+	 * @return The Omino object.
+	 */
+	public Omino getOmino(int index)
+	{
+		if(index < 0 || index >= pieceOrder.size())
+			return null;
+		return pieceOrder.get(index);
+	}
+	
+	/**
 	 * Gets the Tile position of the specified omino, or null if the piece is not on the board.
 	 * @param omino The omino to search for.
 	 * @return A Tile representing the origin position of the omino in the board's current state,
@@ -163,6 +175,57 @@ public class Board {
 	public Tile getOminoPosition(Omino omino)
 	{
 		return allPieces.get(omino);
+	}
+	
+	/**
+	 * Gets the lower left bound of the board: the Tile representing the rightmost column left of which
+	 *  there are no tiles in the layout, and the uppermost row below which there are no tiles in the
+	 *  layout.
+	 * @return The lower left bounding Tile.
+	 */
+	public Tile getLowerLeftBound()
+	{
+		int x = Integer.MAX_VALUE;
+		int y = Integer.MAX_VALUE;
+		for(Tile checkTile : this.layout)
+		{
+			if(x > checkTile.getX())
+				x = checkTile.getX();
+			if(y > checkTile.getY())
+				y = checkTile.getY();
+		}
+		return new Tile(x,y);
+	}
+	
+	
+	/**
+	 * Gets the upper right bound of the board: the Tile representing the leftmost column right of which
+	 *  there are no tiles in the layout, and the bottommost row above which there are no tiles in the
+	 *  layout.
+	 * @return The upper right bounding Tile.
+	 */
+	public Tile getUpperRightBound()
+	{
+		int x = Integer.MIN_VALUE;
+		int y = Integer.MIN_VALUE;
+		for(Tile checkTile : this.layout)
+		{
+			if(x < checkTile.getX())
+				x = checkTile.getX();
+			if(y < checkTile.getY())
+				y = checkTile.getY();
+		}
+		return new Tile(x,y);
+	}
+	
+	/**
+	 * Returns a shallow copy of the layout set; the layout reference is not returned directly so as
+	 *  to protect it from modification. Tiles are immutable so there is no need to protect them.
+	 * @return The layout in a new set.
+	 */
+	public Set<Tile> getLayout()
+	{
+		return new HashSet<Tile>(this.layout);
 	}
 	
 	
