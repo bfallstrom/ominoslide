@@ -134,7 +134,7 @@ public class LayoutFileReaderTest {
 				System.out.println();
 				System.out.println(new BoardViewPlaintext(solution.get(i).getNextBoard()));
 			}
-		} catch(RuntimeException e)
+		} catch(IllegalArgumentException e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());

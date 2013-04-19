@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,6 +73,23 @@ public class LayoutFileReader {
 	public LayoutFileReader(File inputFile) throws FileNotFoundException
 	{
 		lineReader = new BufferedReader(new FileReader(inputFile));
+	}
+	
+	/**
+	 * Constructs a new LayoutFileReader on the given input stream.
+	 * @param in The InputStream to read from.
+	 */
+	public LayoutFileReader(InputStream in)
+	{
+		lineReader = new BufferedReader(new InputStreamReader(in));
+	}
+	
+	/**
+	 * Constructs a new LayoutFileReader on standard in.
+	 */
+	public LayoutFileReader()
+	{
+		this(System.in);
 	}
 	
 	/**

@@ -65,7 +65,7 @@ public class Boards {
 		if(states.get(rootPosition).hasWinner())
 			states.get(rootPosition).trimToWinners();
 		if(!states.get(rootPosition).hasUnblocked())
-			throw new RuntimeException("WARNING! This puzzle appears to be unsolvable!");
+			throw new IllegalArgumentException("WARNING! This puzzle appears to be unsolvable!");
 		return states.get(rootPosition).hasWinner();
 	}
 	
