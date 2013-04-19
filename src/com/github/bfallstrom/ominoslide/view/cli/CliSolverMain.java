@@ -33,10 +33,6 @@ public class CliSolverMain {
 			+ "the same shape between the two layouts, as must the layout itself." + LF + LF
 			+ "Layout should use '#' for unusable tiles, '.' for usable tiles, and unique" + LF
 			+ "alphanumeric characters (case sensitive) to mark the positions of pieces." + LF
-			+ "" + LF
-			+ "" + LF
-			+ "" + LF
-			+ "" + LF
 			;
 	private static final String			ERROR_MESSAGE_FILE_NOT_FOUND = "Error; file \"%s\" was not found.";
 	private static final String			ERROR_MESSAGE_FILE_ARGS = "Error; more than one file path was input.";
