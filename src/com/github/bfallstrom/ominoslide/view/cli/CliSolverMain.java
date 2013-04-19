@@ -38,7 +38,7 @@ public class CliSolverMain {
 	private static final String			ERROR_MESSAGE_FILE_ARGS = "Error; more than one file path was input.";
 	private static final String			ERROR_MESSAGE_INVALID_OPTION = "Error; invalid option \"%s\".";
 	
-	private static final String			ITERATION_STRING = "Iteration #%d complete.";
+	private static final String			ITERATION_STRING = "Iteration #%d complete in %d milliseconds.";
 	
 	private static boolean				silent = false;
 	private static boolean				displayHelp = false;
@@ -134,17 +134,22 @@ public class CliSolverMain {
 				WinningPosition finalBoard = input.getWinningBoard();
 				Boards solver = new Boards(initialBoard, finalBoard);
 				int j = 0;
+				long iterTime = System.currentTimeMillis();
+				long fullTime = iterTime;
 				while(!solver.iterate())
+				{
 					if(verbose)
-						System.out.println(String.format(ITERATION_STRING, j));
+						System.out.println(String.format(ITERATION_STRING, ++j, System.currentTimeMillis() - iterTime));
+					iterTime = System.currentTimeMillis();
+				}
 				List<Move> solution = solver.getSolution();
 				if(verbose)
-					System.out.println("Solution found in " + (solution.get(0).getDepth()+1) + " moves!");
+					System.out.println("Solution found in " + (solution.get(0).getDepth()+1) + " moves and " + (System.currentTimeMillis()-fullTime) + " milliseconds!");
 				System.out.println(new BoardViewPlaintext(solution.get(0).getStartingBoard()));
 				for(int i = 0; i < solution.size(); i++)
 				{
 					if(verbose)
-						System.out.print(Integer.toString(i));
+						System.out.print(Integer.toString(i+1));
 					System.out.println();
 					System.out.println(new BoardViewPlaintext(solution.get(i).getNextBoard()));
 				}
